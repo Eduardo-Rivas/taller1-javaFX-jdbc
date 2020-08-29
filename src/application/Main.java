@@ -3,23 +3,27 @@ package application;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class Main extends Application{
 	@Override
-	public void start(Stage stage) {
+	public void start(Stage primaryStage) {
 	   try {
 	      FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/MainView.fxml"));
-	      Parent parent = loader.load();
-
-	      Scene mainScene = new Scene(parent);
-	      stage.setScene(mainScene);
-	      stage.setTitle("Ejemplo de Aplicación JavaFX");
-	      stage.show();
-	   }
-	   catch(IOException e){
+	      ScrollPane scrolPane = loader.load();
+	      
+	      //--Ajustamos el Menu al ScrolPane--//
+	      scrolPane.setFitToHeight(true);
+	      scrolPane.setFitToWidth(true);
+	      
+	      Scene mainScene = new Scene(scrolPane);
+	      primaryStage.setScene(mainScene);
+	      primaryStage.setTitle("Sistema de Vendedores");
+	      primaryStage.show();
+	   } 
+	   catch (IOException e) {
 	      e.printStackTrace();
 	   }
 	}
