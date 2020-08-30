@@ -35,27 +35,29 @@ public class MainViewController implements Initializable {
 	
 	@FXML
 	public void onmenuIteDepAction() {
-		System.out.println("Opción Cadastro de Departamentos...");
+		loadView("/gui/DepartamentList.fxml");
 	} 
 
 	@FXML
 	public void onmenuIteAboAction() {
 		loadView("/gui/About.fxml");
 	}
-
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		
 	}
 
+	//--Método Presentción de Pantallas de las Opciones--//
 	private synchronized void loadView(String ruta) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
+			
 			//--Vbox de About.fxml--//
 			VBox newVbox = loader.load();
 			 
 			//--Tomamos la referncia de mainScene del Menu--//
+			//--Fué Hecha en la Clase Main, método getMainScene()--//
 			Scene mainScene = Main.getMainScene();
 			
 			/*--Tomamos una Refrencia del Vbox del Menu--//
@@ -78,9 +80,8 @@ public class MainViewController implements Initializable {
 			//--Ya que el Menu siempre debe estar--//
 			mainVbox.getChildren().add(mainMenu);
 			
-			//--Hacemos que Aparesca los Hijo de VBox del About--//
+			//--Hacemos que Apareser los Hijo de VBox del About--//
 			mainVbox.getChildren().addAll(newVbox.getChildren());
-			
 			
 		} catch (IOException e) {
 			Alerts.showAlert("IO Exception", "Load View About", e.getMessage(), AlertType.ERROR);
