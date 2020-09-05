@@ -35,9 +35,9 @@ public class MainViewController implements Initializable {
 	
 	@FXML
 	public void onmenuIteDepAction() {
-		loadView("/gui/DepartamentList.fxml");
+		loadView("/gui/DepartamentoList.fxml"); 
 	} 
-
+ 
 	@FXML
 	public void onmenuIteAboAction() {
 		loadView("/gui/About.fxml");
@@ -47,6 +47,7 @@ public class MainViewController implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 		
 	}
+
 
 	//--Método Presentción de Pantallas de las Opciones--//
 	private synchronized void loadView(String ruta) {
