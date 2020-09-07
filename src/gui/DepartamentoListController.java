@@ -1,19 +1,27 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.util.Alerts;
+import gui.util.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entities.Departamento;
 import model.services.DepartamentoService;
@@ -34,10 +42,14 @@ public class DepartamentoListController implements Initializable{
 	private Button btnIncluir;
 
 	@FXML
-	public void onbtnIncluirAction() {
-		System.out.println("Pulsó Botón Incluir...");
+	public void onbtnIncluirAction(ActionEvent evento) {
+		//--Tomamos el Stage Actual(Pantalla Actual)--//
+		Stage padreStage = Utils.actualStage(evento); 
+		
+		//--Llama al Método para Configurar el Formulario--//
+		createDialogForm("/gui/DepartamentoForm.fxml",padreStage);
 	}
- 
+  
 	private ObservableList<Departamento> obsList;
 	
 	public void setDepartamentoService(DepartamentoService service) {
@@ -66,9 +78,35 @@ public class DepartamentoListController implements Initializable{
 		if(service == null) {
 			throw new IllegalStateException("Servicio está Nulo...");
 		}
+		//--Creamos una Lista y cargamos service.findAll()--//
 		List<Departamento> lista = service.findAll();
 		obsList = FXCollections.observableArrayList(lista);
 		tableViewDep.setItems(obsList); 
+	}
+	
+	//--Método para Crear el Formulario--//
+	private void createDialogForm(String ruta, Stage padreStage) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
+			Pane pane = loader.load();
+			
+			//--Configuramos la Pantalla Nueva--//
+			Stage nuevaPantalla = new Stage();
+			nuevaPantalla.setTitle("Registro de Departamentos");
+			
+			//--Cramos un Scene apartir del Pane--//
+			nuevaPantalla.setScene(new Scene(pane));
+			nuevaPantalla.setResizable(false);
+			
+			//--Stage Padre(Propietario) de la Nueva Ventana--//
+			nuevaPantalla.initOwner(padreStage);
+			
+			nuevaPantalla.initModality(Modality.WINDOW_MODAL);
+			nuevaPantalla.showAndWait();
+		} 
+		catch (IOException e) {
+			Alerts.showAlert("IO Exception", "Error Load View", e.getMessage(), AlertType.ERROR);
+		}
 	}
 
 }
