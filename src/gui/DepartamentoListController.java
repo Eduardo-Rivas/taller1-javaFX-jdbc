@@ -1,6 +1,7 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -18,9 +19,7 @@ import model.entities.Departamento;
 import model.services.DepartamentoService;
 
 public class DepartamentoListController implements Initializable{
-
-	//--Creamos una Dependencia con la Clase DepartamentoService--//
-	private DepartamentoService service;
+	private DepartamentoService service; 
 	
 	@FXML
 	private TableView<Departamento> tableViewDep;
@@ -33,17 +32,15 @@ public class DepartamentoListController implements Initializable{
 	
 	@FXML
 	private Button btnIncluir;
-	
-	//--Creamos obsList--//
-	private ObservableList<Departamento> obsList;
-	
+
 	@FXML
 	public void onbtnIncluirAction() {
 		System.out.println("Pulsó Botón Incluir...");
 	}
-
-	//--Método para Inyectar Dependencia--//
-	public void setDepartamentoService(DepartamentoService service){
+ 
+	private ObservableList<Departamento> obsList;
+	
+	public void setDepartamentoService(DepartamentoService service) {
 		this.service = service;
 	}
 	
@@ -63,23 +60,15 @@ public class DepartamentoListController implements Initializable{
 		//--Hacemos un DawonCasting a Stage--//
 		Stage stage = (Stage) Main.getMainScene().getWindow();
 		tableViewDep.prefHeightProperty().bind(stage.heightProperty());
-	}
-	
-	//--Método para Actualizar obsList--//
-	public void updateObsList() {
+	} 
+
+	public void updateTableView() {
 		if(service == null) {
-			throw new IllegalStateException("Service was Null...");
+			throw new IllegalStateException("Servicio está Nulo...");
 		}
-		
-		//--Cragamos los Departamentos--//
 		List<Departamento> lista = service.findAll();
-		
-		//--Cargamos en ObsList--//
 		obsList = FXCollections.observableArrayList(lista);
-		
-		//--Cargamos la TableView--//
-		tableViewDep.setItems(obsList);;
+		tableViewDep.setItems(obsList); 
 	}
-	
 
 }

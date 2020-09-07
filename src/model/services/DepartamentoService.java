@@ -6,14 +6,12 @@ import java.util.List;
 import model.entities.Departamento;
 
 public class DepartamentoService {
-
-	//--Método para Mockar Deptos--//
-	public List<Departamento> findAll() {
-		List<Departamento> lista = new ArrayList<>(); 
+	
+	public List<Departamento> findAll(){
+		List<Departamento> lista = new ArrayList<>();
 		lista.add(new Departamento(1, "Libros"));
-		lista.add(new Departamento(2, "Electronics"));
-		lista.add(new Departamento(3, "Computers"));
+		lista.add(new Departamento(2, "Electrónicos"));
+		lista.add(new Departamento(2, "Auto Piezas"));
 		return lista;
 	}
-	
 }
