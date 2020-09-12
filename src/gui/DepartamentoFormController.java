@@ -9,9 +9,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import model.entities.Departamento;
 
 public class DepartamentoFormController implements Initializable {
 
+	//--Cramos una Dependencia--//
+	private Departamento dpto;
+	
 	@FXML
 	private TextField txtId;
 	
@@ -26,6 +30,11 @@ public class DepartamentoFormController implements Initializable {
 	
 	@FXML
 	private Button btnCancel;
+	
+	//--Método para Inyectar dependecia--//
+	public void setDepartamento(Departamento dpto) {
+		this.dpto = dpto;
+	}
 	
 	@FXML
 	public void onbtnSaveAction() {
@@ -45,6 +54,17 @@ public class DepartamentoFormController implements Initializable {
 	private void initCampos() {
 		ValidaText.setTextFieldInteger(txtId);
 		ValidaText.setTextFieldMaxLength(txtNombre, 30);
+	}
+	
+	//--Método para Actualizar los Textos del Fromulario--//
+	public void updateFormDpto(){
+		//--Verifica que el Dpto no esté Vacio--//
+		if(dpto == null){
+			throw new IllegalStateException("La Departamento está Vacia");
+		}
+		//--Cargamos los Valores a los Txts--//
+		txtId.setText(String.valueOf(dpto.getId()));
+		txtNombre.setText(dpto.getNombre());
 	}
 
 }

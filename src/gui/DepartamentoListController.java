@@ -46,8 +46,11 @@ public class DepartamentoListController implements Initializable{
 		//--Tomamos el Stage Actual(Pantalla Actual)--//
 		Stage padreStage = Utils.actualStage(evento); 
 		
+		//--Instanciaos un Departamento Nuevo--//
+		Departamento obj = new Departamento();
+		
 		//--Llama al Método para Configurar el Formulario--//
-		createDialogForm("/gui/DepartamentoForm.fxml",padreStage);
+		createDialogForm(obj,"/gui/DepartamentoForm.fxml",padreStage);
 	}
   
 	private ObservableList<Departamento> obsList;
@@ -85,10 +88,15 @@ public class DepartamentoListController implements Initializable{
 	}
 	
 	//--Método para Crear el Formulario--//
-	private void createDialogForm(String ruta, Stage padreStage) {
+	private void createDialogForm(Departamento obj,String ruta, Stage padreStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
 			Pane pane = loader.load();
+			
+			//--Tomamos una Referencial del Formulario--//
+			DepartamentoFormController controller = loader.getController();
+			controller.setDepartamento(obj);
+			controller.updateFormDpto();
 			
 			//--Configuramos la Pantalla Nueva--//
 			Stage nuevaPantalla = new Stage();
