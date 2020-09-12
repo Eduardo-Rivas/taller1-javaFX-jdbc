@@ -3,18 +3,27 @@ package gui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import db.Dbexception;
+import gui.util.Alerts;
+import gui.util.Utils;
 import gui.util.ValidaText;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import model.entities.Departamento;
+import model.services.DepartamentoService;
 
 public class DepartamentoFormController implements Initializable {
 
-	//--Cramos una Dependencia--//
-	private Departamento dpto;
+	//--Ceramos una Dependecia del Deprtamento--//
+	private Departamento depart;
+
+	//--Ceramos una Dependecia del Servicio--//
+	private DepartamentoService serviDep;
 	
 	@FXML
 	private TextField txtId;
@@ -31,19 +40,54 @@ public class DepartamentoFormController implements Initializable {
 	@FXML
 	private Button btnCancel;
 	
-	//--Método para Inyectar dependecia--//
-	public void setDepartamento(Departamento dpto) {
-		this.dpto = dpto;
+	//--Creamos un Método para Asignar la dependencia--//
+	public void setDepartamento(Departamento depart) {
+		this.depart =  depart;
+	}
+
+	//--Creamos un Método para Asignar serviDep--//
+	public void setDepartamentoServicio(DepartamentoService serviDep) {
+		this.serviDep = serviDep;
+	} 
+	 
+	@FXML
+	public void onbtnSaveAction(ActionEvent evento) {
+		if(depart == null) {
+			throw new IllegalStateException("Departamento Estaba Nulo");
+		}
+		if(serviDep == null) {
+			throw new IllegalStateException("Servicio Estaba Nulo");
+		}
+		try {
+			//--Llamamos al Métdo getDatos--//
+			depart = getDatos();
+			
+			//--Llamamos al Servicio para Salvar los Datos--//
+			serviDep.insertOrUpdate(depart);
+			labErr.setText("Registro Actualizado...");
+			
+			//--Cerramos la Ventana Actual--//
+			Utils.actualStage(evento).close();
+			
+		} catch (Dbexception e) {
+			Alerts.showAlert("Registro Nulo", null, e.getMessage(), AlertType.ERROR);
+		}
+
 	}
 	
-	@FXML
-	public void onbtnSaveAction() {
-		System.out.println("Pusó Boton Salvar...");
+	//--Método para tomar los Datos de la Pantalla--//
+	private Departamento getDatos() {
+		//--Instanciamos el Deprtamento--//
+		Departamento obj = new Departamento();
+		obj.setId(Utils.convertirEntero(txtId.getText()));
+		obj.setNombre(txtNombre.getText());
+		return obj;
 	}
-	
+
 	@FXML
-	public void onbtnCancelAction() {
-		System.out.println("Pusó Boton Cancelar...");
+	public void onbtnCancelAction(ActionEvent evento){
+		//--Cerramos la Ventana Actual--//
+		Utils.actualStage(evento).close();
 	}
 	
 	@Override
@@ -56,15 +100,14 @@ public class DepartamentoFormController implements Initializable {
 		ValidaText.setTextFieldMaxLength(txtNombre, 30);
 	}
 	
-	//--Método para Actualizar los Textos del Fromulario--//
-	public void updateFormDpto(){
-		//--Verifica que el Dpto no esté Vacio--//
-		if(dpto == null){
-			throw new IllegalStateException("La Departamento está Vacia");
+	//--Método para Cargar los TextField a la Pantalla--//
+	public void cargaTextDepto() {
+		//--Verificamos que el Depto no esté vacio--//
+		if(depart == null) {
+			throw new IllegalStateException("Depsrtamento está Nulo");
 		}
-		//--Cargamos los Valores a los Txts--//
-		txtId.setText(String.valueOf(dpto.getId()));
-		txtNombre.setText(dpto.getNombre());
+		txtId.setText(String.valueOf(depart.getId()));
+		txtNombre.setText(depart.getNombre());
 	}
 
 }

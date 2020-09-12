@@ -46,7 +46,7 @@ public class DepartamentoListController implements Initializable{
 		//--Tomamos el Stage Actual(Pantalla Actual)--//
 		Stage padreStage = Utils.actualStage(evento); 
 		
-		//--Instanciaos un Departamento Nuevo--//
+		//--Instanciamos un Departamento Vacio--//
 		Departamento obj = new Departamento();
 		
 		//--Llama al Método para Configurar el Formulario--//
@@ -93,10 +93,17 @@ public class DepartamentoListController implements Initializable{
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
 			Pane pane = loader.load();
 			
-			//--Tomamos una Referencial del Formulario--//
+			//--Establecemos la Refrencia del Formulario--//
 			DepartamentoFormController controller = loader.getController();
+			
+			//--Inyectamos la Dependencia--//
 			controller.setDepartamento(obj);
-			controller.updateFormDpto();
+
+			//--Inyectamos la Dependencia del DepartamentoServicio--//
+			controller.setDepartamentoServicio(new DepartamentoService());
+			
+			//--Cargamos los Txts--//
+			controller.cargaTextDepto();
 			
 			//--Configuramos la Pantalla Nueva--//
 			Stage nuevaPantalla = new Stage();

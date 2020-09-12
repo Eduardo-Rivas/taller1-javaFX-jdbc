@@ -16,4 +16,16 @@ public class DepartamentoService {
 	public List<Departamento> findAll(){
 		return depDao.findAll();
 	}
+	
+	//--Método para Incluir o Actualizar Dpto.--//
+	public void insertOrUpdate(Departamento obj) {
+		if(obj.getId() == null) {
+			depDao.insert(obj);
+		}
+		else {
+			depDao.update(obj);
+		}
+	}
+	
+	
 }
