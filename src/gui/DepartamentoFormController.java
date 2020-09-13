@@ -1,9 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import db.Dbexception;
+import gui.Listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import gui.util.ValidaText;
@@ -25,6 +28,9 @@ public class DepartamentoFormController implements Initializable {
 	//--Ceramos una Dependecia del Servicio--//
 	private DepartamentoService serviDep;
 	
+	//--Lista de Obj. Interfaces--//
+	private List<DataChangeListener> dataChagedListeners = new ArrayList<>();
+	
 	@FXML
 	private TextField txtId;
 	
@@ -36,7 +42,7 @@ public class DepartamentoFormController implements Initializable {
 	
 	@FXML
 	private Button btnSave;
-	
+	 
 	@FXML
 	private Button btnCancel;
 	
@@ -50,6 +56,12 @@ public class DepartamentoFormController implements Initializable {
 		this.serviDep = serviDep;
 	} 
 	 
+	//--Método para escribir ChagedListener--//
+	public void escribeDataChangedListener(DataChangeListener listener) {
+		//--Agregamos a la lsita--//
+		dataChagedListeners.add(listener);
+	}
+	
 	@FXML
 	public void onbtnSaveAction(ActionEvent evento) {
 		if(depart == null) {
@@ -61,10 +73,15 @@ public class DepartamentoFormController implements Initializable {
 		try {
 			//--Llamamos al Métdo getDatos--//
 			depart = getDatos();
-			
+
 			//--Llamamos al Servicio para Salvar los Datos--//
-			serviDep.insertOrUpdate(depart);
+			int opc = 1;//--Incluir--//
+			serviDep.insertOrUpdate(depart,opc);
+			
 			labErr.setText("Registro Actualizado...");
+	
+			//--Llaamos al Método para Notificar el Listener--//
+			notifyDataChagedListeners();
 			
 			//--Cerramos la Ventana Actual--//
 			Utils.actualStage(evento).close();
@@ -75,10 +92,18 @@ public class DepartamentoFormController implements Initializable {
 
 	}
 	
+	private void notifyDataChagedListeners() {
+		for(DataChangeListener xlistener : dataChagedListeners) {
+			xlistener.onDataChanged();
+		}
+		
+	}
+
 	//--Método para tomar los Datos de la Pantalla--//
 	private Departamento getDatos() {
 		//--Instanciamos el Deprtamento--//
 		Departamento obj = new Departamento();
+
 		obj.setId(Utils.convertirEntero(txtId.getText()));
 		obj.setNombre(txtNombre.getText());
 		return obj;
@@ -98,14 +123,16 @@ public class DepartamentoFormController implements Initializable {
 	private void initCampos() {
 		ValidaText.setTextFieldInteger(txtId);
 		ValidaText.setTextFieldMaxLength(txtNombre, 30);
-	}
+	} 
 	
 	//--Método para Cargar los TextField a la Pantalla--//
 	public void cargaTextDepto() {
 		//--Verificamos que el Depto no esté vacio--//
 		if(depart == null) {
-			throw new IllegalStateException("Depsrtamento está Nulo");
-		}
+			throw new IllegalStateException("Departamento está Nulo");
+		} 
+		//--Llamaos la Método goR() tomar siguiente Id--//
+		depart.setId(serviDep.goReg());
 		txtId.setText(String.valueOf(depart.getId()));
 		txtNombre.setText(depart.getNombre());
 	}

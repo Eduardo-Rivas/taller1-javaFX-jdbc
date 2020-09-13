@@ -18,14 +18,29 @@ public class DepartamentoService {
 	}
 	
 	//--Método para Incluir o Actualizar Dpto.--//
-	public void insertOrUpdate(Departamento obj) {
-		if(obj.getId() == null) {
+	public void insertOrUpdate(Departamento obj,int opc) {
+		//if(obj.getId() == null) {
+		//	depDao.insert(obj);
+		//}
+		///else {
+		//	depDao.update(obj);
+		//}
+
+		if(opc == 1) {
 			depDao.insert(obj);
 		}
 		else {
 			depDao.update(obj);
 		}
+
+		
 	}
-	
+	  
+	//--Definicion de Método para tomar Ultimo Registro.--//
+	public Integer goReg() {
+		int xval = depDao.goToReg();
+		return xval++;
+	}
+
 	
 }

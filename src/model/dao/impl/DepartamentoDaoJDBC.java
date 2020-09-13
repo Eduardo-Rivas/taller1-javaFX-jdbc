@@ -150,4 +150,30 @@ public class DepartamentoDaoJDBC implements DepartamentoDao {
 		return dep;
 	}//--Fin del Método Interno instanDep()--//
 
+	@Override
+	public Integer goToReg() {
+		PreparedStatement st = null;
+		ResultSet         rs = null;
+		int xreg = 0;
+		
+		try {
+			st = conn.prepareStatement(
+				"SELECT Id, Nombre FROM departamento "
+			   +"ORDER BY Id");
+			rs = st.executeQuery();
+			while(rs.next()){
+				Departamento dep1 = instanDep(rs);
+				xreg = dep1.getId()+1;
+			} 
+			return xreg; 
+		} 
+		catch (SQLException e) {
+			throw new Dbexception(e.getMessage());
+		}
+		finally {
+			Conexion.cerrarRs(rs);
+			Conexion.cerrarSt(st);
+		}
+	}
+
 }//--Fin de la Clase DepartamentoDaoJDBC--//

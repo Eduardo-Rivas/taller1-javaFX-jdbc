@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.Listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
@@ -26,7 +27,7 @@ import javafx.stage.Stage;
 import model.entities.Departamento;
 import model.services.DepartamentoService;
 
-public class DepartamentoListController implements Initializable{
+public class DepartamentoListController implements Initializable, DataChangeListener{
 	private DepartamentoService service; 
 	
 	@FXML
@@ -85,7 +86,7 @@ public class DepartamentoListController implements Initializable{
 		List<Departamento> lista = service.findAll();
 		obsList = FXCollections.observableArrayList(lista);
 		tableViewDep.setItems(obsList); 
-	}
+	} 
 	
 	//--Método para Crear el Formulario--//
 	private void createDialogForm(Departamento obj,String ruta, Stage padreStage) {
@@ -101,8 +102,11 @@ public class DepartamentoListController implements Initializable{
 
 			//--Inyectamos la Dependencia del DepartamentoServicio--//
 			controller.setDepartamentoServicio(new DepartamentoService());
-			
-			//--Cargamos los Txts--//
+	
+			//--Escribimos el evento Listener--//
+			controller.escribeDataChangedListener(this);
+			 
+			//--Cargamos los Txts DepartamentoFormController()--//
 			controller.cargaTextDepto();
 			
 			//--Configuramos la Pantalla Nueva--//
@@ -122,6 +126,12 @@ public class DepartamentoListController implements Initializable{
 		catch (IOException e) {
 			Alerts.showAlert("IO Exception", "Error Load View", e.getMessage(), AlertType.ERROR);
 		}
+	}
+
+	@Override
+	public void onDataChanged() {
+		//--Actualizmos el TableView--//
+		updateTableView();
 	}
 
 }

@@ -34,7 +34,7 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
-            <TextField fx:id="txtId" editable="false" prefHeight="15.0" prefWidth="105.0" GridPane.columnIndex="1" />
+            <TextField fx:id="txtId" disable="true" editable="false" focusTraversable="false" opacity="0.56" prefHeight="15.0" prefWidth="105.0" GridPane.columnIndex="1" />
             <TextField fx:id="txtNombre" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="labErr" textFill="#ee0101" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
