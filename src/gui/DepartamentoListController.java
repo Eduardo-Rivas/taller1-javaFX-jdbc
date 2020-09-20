@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
-import gui.Listeners.DataChangeListener;
+import gui.Listeners.DataChangeListeners;
 import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
@@ -27,7 +27,7 @@ import javafx.stage.Stage;
 import model.entities.Departamento;
 import model.services.DepartamentoService;
 
-public class DepartamentoListController implements Initializable, DataChangeListener{
+public class DepartamentoListController implements Initializable, DataChangeListeners{
 	private DepartamentoService service; 
 	
 	@FXML
@@ -103,8 +103,8 @@ public class DepartamentoListController implements Initializable, DataChangeList
 			//--Inyectamos la Dependencia del DepartamentoServicio--//
 			controller.setDepartamentoServicio(new DepartamentoService());
 	
-			//--Escribimos el evento Listener--//
-			controller.escribeDataChangedListener(this);
+			//--Escribios para Escuchar el Evento--//
+			controller.escribeDataChageListener(this);
 			 
 			//--Cargamos los Txts DepartamentoFormController()--//
 			controller.cargaTextDepto();
@@ -129,9 +129,9 @@ public class DepartamentoListController implements Initializable, DataChangeList
 	}
 
 	@Override
-	public void onDataChanged() {
-		//--Actualizmos el TableView--//
+	public void onDataChaged() {
 		updateTableView();
 	}
+
 
 }
