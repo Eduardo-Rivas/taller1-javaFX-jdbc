@@ -9,6 +9,7 @@ import application.Main;
 import gui.Listeners.DataChangeListeners;
 import gui.util.Alerts;
 import gui.util.Utils;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -38,6 +40,9 @@ public class DepartamentoListController implements Initializable, DataChangeList
 	
 	@FXML
 	private TableColumn<Departamento, String>  tableColNombre;
+	
+	@FXML
+	TableColumn<Departamento, Departamento> tableColumnEDIT;
 	
 	@FXML
 	private Button btnIncluir;
@@ -84,10 +89,13 @@ public class DepartamentoListController implements Initializable, DataChangeList
 		}
 		//--Creamos una Lista y cargamos service.findAll()--//
 		List<Departamento> lista = service.findAll();
-		obsList = FXCollections.observableArrayList(lista);
+		obsList = FXCollections.observableArrayList(lista); 
 		tableViewDep.setItems(obsList); 
-	} 
-	
+		
+		//--Boton de Edicion en TableView--//
+		initEditButtons();
+	}  
+	 
 	//--Método para Crear el Formulario--//
 	private void createDialogForm(Departamento obj,String ruta, Stage padreStage) {
 		try {
@@ -105,10 +113,10 @@ public class DepartamentoListController implements Initializable, DataChangeList
 	
 			//--Escribios para Escuchar el Evento--//
 			controller.escribeDataChageListener(this);
-			 
-			//--Cargamos los Txts DepartamentoFormController()--//
-			controller.cargaTextDepto();
 			
+			//--Cargamos los Txts DepartamentoFormController()--//
+			controller.cargaTextDepto();//--Incluyendo--//
+			 
 			//--Configuramos la Pantalla Nueva--//
 			Stage nuevaPantalla = new Stage();
 			nuevaPantalla.setTitle("Registro de Departamentos");
@@ -132,6 +140,28 @@ public class DepartamentoListController implements Initializable, DataChangeList
 	public void onDataChaged() {
 		updateTableView();
 	}
+ 
 
-
+	private void initEditButtons() {
+		tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnEDIT.setCellFactory(param -> new TableCell<Departamento, Departamento>() {
+			private final Button button = new Button("edit");
+		
+			@Override
+			protected void updateItem(Departamento obj, boolean empty) {
+				super.updateItem(obj, empty);
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(
+						event -> createDialogForm(
+								obj, "/gui/DepartamentoForm.fxml",Utils.actualStage(event)));
+			}
+		
+		});
+	}//--Fin del Método initEditButtons()--/
+	
+	
 }

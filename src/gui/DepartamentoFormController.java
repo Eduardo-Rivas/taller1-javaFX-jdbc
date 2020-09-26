@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
-
 import db.Dbexception;
 import gui.Listeners.DataChangeListeners;
 import gui.util.Alerts;
@@ -31,6 +30,8 @@ public class DepartamentoFormController implements Initializable {
 	//--Ceramos una Dependecia del Servicio--//
 	private DepartamentoService serviDep;
 	
+	private DepartamentoListController depListCont;
+	
 	@FXML
 	private TextField txtId;
 	
@@ -45,9 +46,10 @@ public class DepartamentoFormController implements Initializable {
 	 
 	@FXML
 	private Button btnCancel;
-
+	
 	//--Cramos una Lista para Registrar Eventos--//
 	private List<DataChangeListeners> dataChangeListeners = new ArrayList<>();
+	
 	
 	//--Creamos un Método para Asignar la dependencia--//
 	public void setDepartamento(Departamento depart) {
@@ -75,10 +77,12 @@ public class DepartamentoFormController implements Initializable {
 		try {
 			//--Llamamos al Métdo getDatos--//
 			depart = getDatos();
-
+ 
+			depListCont = new DepartamentoListController();
+			 
 			//--Llamamos al Servicio para Salvar los Datos--//
-			int opc = 1;//--Incluir--//
-			serviDep.insertOrUpdate(depart,opc);
+			//int val = depListCont.getFlag();//--Incluir--//
+			serviDep.insertOrUpdate(depart);
 			
 			labErr.setText("Registro Actualizado...");
 	
@@ -97,7 +101,7 @@ public class DepartamentoFormController implements Initializable {
 		}
 
 	}
-	
+	 
 	//--Notifica el Listener en la Lista--//
 	private void notificaDataChageListener() {
 		for(DataChangeListeners listeners : dataChangeListeners) {
@@ -105,12 +109,13 @@ public class DepartamentoFormController implements Initializable {
 		}
 		
 	}
-
+ 
 	//--Método para tomar los Datos de la Pantalla--//
 	private Departamento getDatos() {
 		//--Instanciamos el Deprtamento--//
 		Departamento obj = new Departamento();
-
+	
+		
 		//--Instanciamos Clase de Cargar Errores de Campos--//
 		ValidaErroresCampos exception = new ValidaErroresCampos("Validación de Campos");
 		
@@ -128,7 +133,6 @@ public class DepartamentoFormController implements Initializable {
 		if(exception.getErrores().size() > 0){
 			throw exception;
 		}
-		
 		return obj;
 	}
  
@@ -155,11 +159,9 @@ public class DepartamentoFormController implements Initializable {
 		if(depart == null) {
 			throw new IllegalStateException("Departamento está Nulo");
 		} 
-		//--Llamaos la Método goR() tomar siguiente Id--//
-		depart.setId(serviDep.goReg());
+		
 		txtId.setText(String.valueOf(depart.getId()));
 		txtNombre.setText(depart.getNombre());
-
 	}
 	
 	//--Método Privado para Asiginar los Msgs--//
@@ -170,9 +172,8 @@ public class DepartamentoFormController implements Initializable {
 		//--Verificamos que el Campo nombre existe--//
 		if(campos.contains("nombre")){
 			//--Asignamos al Label el Contenido del Error--//
-			labErr.setText(errores.get("nombre"));
-		}
-		
+			labErr.setText(errores.get("nombre")); 
+		} 
 	}
 	
 }
