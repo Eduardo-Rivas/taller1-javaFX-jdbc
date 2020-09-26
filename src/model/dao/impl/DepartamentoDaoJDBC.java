@@ -10,6 +10,7 @@ import java.util.List;
 
 import db.Conexion;
 import db.Dbexception;
+import db.DbintegrtyException;
 import model.dao.DepartamentoDao;
 import model.entities.Departamento;
 
@@ -79,20 +80,22 @@ public class DepartamentoDaoJDBC implements DepartamentoDao {
 	}//--Fin del Método update()--//
 
 	@Override
-	public void deleteById(Integer id) {
+	//public void deleteById(Integer id) {
+	public void deleteById(Departamento dep) {
 		PreparedStatement st = null;
-		
+		 
 		try {
 			st = conn.prepareStatement(
 				"DELETE FROM departamento WHERE  Id = ?");
-			st.setInt(1, id);
+			
+			st.setInt(1, dep.getId());
 			st.executeUpdate();
 		} 
 		catch (SQLException e) {
-			throw new Dbexception(e.getMessage());	
+			throw new DbintegrtyException(e.getMessage());	
 		}
 	}//--Fin del Método deleteById()--//
-
+ 
 	@Override
 	public Departamento findById(Integer id) {
 		PreparedStatement st = null;

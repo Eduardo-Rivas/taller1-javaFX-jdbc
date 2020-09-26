@@ -3,9 +3,11 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import application.Main;
+import db.DbintegrtyException;
 import gui.Listeners.DataChangeListeners;
 import gui.util.Alerts;
 import gui.util.Utils;
@@ -19,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -43,7 +46,10 @@ public class DepartamentoListController implements Initializable, DataChangeList
 	
 	@FXML
 	TableColumn<Departamento, Departamento> tableColumnEDIT;
-	
+
+	@FXML
+	TableColumn<Departamento, Departamento> tableColumnREMOVE;
+
 	@FXML
 	private Button btnIncluir;
 
@@ -93,7 +99,10 @@ public class DepartamentoListController implements Initializable, DataChangeList
 		tableViewDep.setItems(obsList); 
 		
 		//--Boton de Edicion en TableView--//
-		initEditButtons();
+		initEditButtons(); 
+		
+		//--Boton para Remover en TableView--//
+		initRemoveButtons();
 	}  
 	 
 	//--Método para Crear el Formulario--//
@@ -141,7 +150,7 @@ public class DepartamentoListController implements Initializable, DataChangeList
 		updateTableView();
 	}
  
-
+	//--Método para Modificar--//
 	private void initEditButtons() {
 		tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 		tableColumnEDIT.setCellFactory(param -> new TableCell<Departamento, Departamento>() {
@@ -163,5 +172,44 @@ public class DepartamentoListController implements Initializable, DataChangeList
 		});
 	}//--Fin del Método initEditButtons()--/
 	
+	//--Inicio del Metodo para Remover--//
+	private void initRemoveButtons() {
+		tableColumnREMOVE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnREMOVE.setCellFactory(param -> new TableCell<Departamento, Departamento>() {
+			private final Button button = new Button("remove");
+			 
+			@Override
+			protected void updateItem(Departamento obj, boolean empty) {
+				super.updateItem(obj, empty);
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(event -> removeEntity(obj));
+				 
+			}
+		});	
+	}//--Final del Método Remover-//
+
+	//--Método Interno para Recibir confirmacón para Eliminar--//
+	private void removeEntity(Departamento obj) {
+		Optional<ButtonType> result = 
+			Alerts.showConfirmation("Confirmación", "Está seguro de Eliminar el Registro...");
+		
+		if(result.get() == ButtonType.OK) {
+			if(service == null) {
+				throw new IllegalStateException("Servicio Está Nulo");
+			}
+			try {
+				service.remove(obj);
+				updateTableView();
+			} catch (DbintegrtyException e) {
+				Alerts.showAlert("Error de Borrado", null, e.getMessage(), AlertType.ERROR);
+			}
+		}
+
+	}
 	
+   
 }

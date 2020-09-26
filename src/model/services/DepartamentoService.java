@@ -26,13 +26,11 @@ public class DepartamentoService {
 			depDao.update(obj);
 		}
 		
+	} 
+	
+	//--Método para Eliminar Un Departamento--//
+	public void remove(Departamento obj) {
+		depDao.deleteById(obj);
 	}
-	  
-	//--Definicion de Método para tomar Ultimo Registro.--//
-	public Integer goReg() {
-		int xval = depDao.goToReg();
-		return xval++;
-	}
-
 	
 }
