@@ -17,7 +17,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import model.services.DepartamentoService;
-import gui.DepartamentoListController;
+import model.services.VendedorService;
 
 public class MainViewController implements Initializable {
 
@@ -33,9 +33,12 @@ public class MainViewController implements Initializable {
 	
 	@FXML
 	public void onmenuItemVenAction() {
-		System.out.println("Opción Cadastro de Vendedor...");
+		loadView("/gui/VendedorList.fxml", (VendedorListController contorller) -> {
+			contorller.setVendedorService(new VendedorService());
+			contorller.updateTableView();
+		});
 	}
-	
+	 
 	@FXML
 	public void onmenuIteDepAction() {
 		loadView("/gui/DepartamentoList.fxml", (DepartamentoListController contorller) -> {

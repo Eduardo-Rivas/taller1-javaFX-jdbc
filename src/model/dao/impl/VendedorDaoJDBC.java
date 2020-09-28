@@ -99,13 +99,13 @@ public class VendedorDaoJDBC implements VendedorDao{
 	}
 
 	@Override
-	public void deleteById(Integer id) {
+	public void deleteById(Vendedor ven) {
 		PreparedStatement st = null;
 		
 		try {
 			st = conn.prepareStatement(
 				"DELETE FROM vendedor WHERE  Id = ?");
-			st.setInt(1, id);
+			st.setInt(1, ven.getId());
 			st.executeUpdate();
 		} 
 		catch (SQLException e) {
@@ -256,6 +256,8 @@ public class VendedorDaoJDBC implements VendedorDao{
 		dep.setNombre(rs.getString("Nomdep"));
 		return dep;
 	}
+
+
 
 
 

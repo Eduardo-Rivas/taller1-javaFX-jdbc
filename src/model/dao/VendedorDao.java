@@ -9,7 +9,7 @@ public interface VendedorDao {
 	//--Metodos a Implementar--//
 	void insert(Vendedor ven);
 	void update(Vendedor ven);
-	void deleteById(Integer id);
+	void deleteById(Vendedor ven);
 
 	//--Vendedor por Código--//
 	Vendedor findById(Integer id);
