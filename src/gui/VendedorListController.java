@@ -1,6 +1,7 @@
 package gui;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -36,6 +37,15 @@ public class VendedorListController implements Initializable, DataChangeListener
 	@FXML
 	private TableColumn<Vendedor, Integer> tableColId;
 	
+	@FXML
+	private TableColumn<Vendedor, String>  tableColEmail;
+	
+	@FXML
+	private TableColumn<Vendedor, Date>  tableColFecha;
+
+	@FXML
+	private TableColumn<Vendedor, Double>  tableColSalarioBase;
+
 	@FXML
 	private TableColumn<Vendedor, String>  tableColNombre;
 	
@@ -77,6 +87,13 @@ public class VendedorListController implements Initializable, DataChangeListener
 		//--Configuramos las Columnas del TableView--//
 		tableColId.setCellValueFactory(new PropertyValueFactory<>("Id"));
 		tableColNombre.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
+		tableColEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+		tableColSalarioBase.setCellValueFactory(new PropertyValueFactory<>("salarioBase"));
+		Utils.formatTableColumnDouble(tableColSalarioBase, 2);
+		 
+		tableColFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+		Utils.formatTableColumnDate(tableColFecha, "dd/MM/yyyy");
+		
 		
 		//--Redimencionamos el TableView a la Pantalle--//
 		//--Hacemos un DawonCasting a Stage--//
