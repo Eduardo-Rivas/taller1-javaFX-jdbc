@@ -243,7 +243,7 @@ public class VendedorDaoJDBC implements VendedorDao{
 		obj.setId(rs.getInt("Id"));
 		obj.setNombre(rs.getString("Nombre"));
 		obj.setEmail(rs.getString("Email"));
-		obj.setFecha(rs.getDate("Fecha"));
+		obj.setFecha(new java.util.Date(rs.getTimestamp("Fecha").getTime()));
 		obj.setSalarioBase(rs.getDouble("salarioBase"));
 		obj.setDepartamento(dep);
 		return obj;
@@ -256,9 +256,5 @@ public class VendedorDaoJDBC implements VendedorDao{
 		dep.setNombre(rs.getString("Nomdep"));
 		return dep;
 	}
-
-
-
-
 
 }

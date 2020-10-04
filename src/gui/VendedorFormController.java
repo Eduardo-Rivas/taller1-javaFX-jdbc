@@ -1,8 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList; 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -16,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Vendedor;
@@ -34,12 +38,32 @@ public class VendedorFormController implements Initializable {
 	
 	@FXML
 	private TextField txtId;
-	
+
 	@FXML
 	private TextField txtNombre;
 	
 	@FXML
+	private TextField txtEmail;
+
+	@FXML
+	private DatePicker dpFecha;
+	
+	@FXML
+	private TextField txtSalarioBase;
+
+	@FXML
 	private Label labErr;
+
+	@FXML
+	private Label labErrEmail;
+	
+	@FXML
+	private Label labErrFecha;
+
+	@FXML
+	private Label labErrSalarioBase;
+
+	
 	
 	@FXML
 	private Button btnSave;
@@ -150,7 +174,10 @@ public class VendedorFormController implements Initializable {
 
 	private void initCampos() {
 		ValidaText.setTextFieldInteger(txtId);
-		ValidaText.setTextFieldMaxLength(txtNombre, 30);
+		ValidaText.setTextFieldMaxLength(txtNombre, 70);
+		ValidaText.setTextFieldDouble(txtSalarioBase);
+		ValidaText.setTextFieldMaxLength(txtEmail, 60);
+		Utils.formatDatePicker(dpFecha, "dd/MM/yyyy");
 	} 
 	
 	//--Método para Cargar los TextField a la Pantalla--//
@@ -159,9 +186,16 @@ public class VendedorFormController implements Initializable {
 		if(ven == null) {
 			throw new IllegalStateException("Vendedor está Nulo");
 		} 
-		
+		 
 		txtId.setText(String.valueOf(ven.getId()));
 		txtNombre.setText(ven.getNombre());
+		txtEmail.setText(ven.getEmail());
+		Locale.setDefault(Locale.US);
+		txtSalarioBase.setText(String.format("%.2f", ven.getSalarioBase()));
+		if(ven.getFecha() != null){
+			dpFecha.setValue(LocalDate.ofInstant(ven.getFecha().toInstant(), ZoneId.systemDefault()));
+		}
+		
 	}
 	
 	//--Método Privado para Asiginar los Msgs--//
