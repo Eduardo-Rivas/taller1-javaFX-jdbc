@@ -141,6 +141,7 @@ public class DepartamentoListController implements Initializable, DataChangeList
 			nuevaPantalla.showAndWait();
 		} 
 		catch (IOException e) {
+			e.printStackTrace();
 			Alerts.showAlert("IO Exception", "Error Load View", e.getMessage(), AlertType.ERROR);
 		}
 	}

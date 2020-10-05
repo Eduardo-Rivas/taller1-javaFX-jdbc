@@ -3,27 +3,36 @@ package gui;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+
 import db.Dbexception;
 import gui.Listeners.DataChangeListeners;
 import gui.util.Alerts;
 import gui.util.Utils;
 import gui.util.ValidaText;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
+import model.entities.Departamento;
 import model.entities.Vendedor;
 import model.exceptions.ValidaErroresCampos;
+import model.services.DepartamentoService;
 import model.services.VendedorService;
 
 public class VendedorFormController implements Initializable {
@@ -33,6 +42,8 @@ public class VendedorFormController implements Initializable {
 
 	//--Ceramos una Dependecia del Servicio--//
 	private VendedorService serviVen;
+	
+	private DepartamentoService serviDep;
 	
 	private VendedorListController venListCont;
 	
@@ -50,6 +61,9 @@ public class VendedorFormController implements Initializable {
 	
 	@FXML
 	private TextField txtSalarioBase;
+	
+	@FXML
+	private ComboBox<Departamento> comboBoxDep;
 
 	@FXML
 	private Label labErr;
@@ -62,14 +76,14 @@ public class VendedorFormController implements Initializable {
 
 	@FXML
 	private Label labErrSalarioBase;
-
-	
 	
 	@FXML
 	private Button btnSave;
 	 
 	@FXML
 	private Button btnCancel;
+	
+	private ObservableList<Departamento> obsList;
 	
 	//--Cramos una Lista para Registrar Eventos--//
 	private List<DataChangeListeners> dataChangeListeners = new ArrayList<>();
@@ -81,8 +95,9 @@ public class VendedorFormController implements Initializable {
 	}
  
 	//--Creamos un Método para Asignar serviDep--//
-	public void setVendedorServicio(VendedorService serviVen) {
+	public void setServicios(VendedorService serviVen, DepartamentoService serviDep) {
 		this.serviVen = serviVen;
+		this.serviDep = serviDep; 
 	} 
 	
 	//--Método para A%adir Evento a la LIsta--//
@@ -178,6 +193,7 @@ public class VendedorFormController implements Initializable {
 		ValidaText.setTextFieldDouble(txtSalarioBase);
 		ValidaText.setTextFieldMaxLength(txtEmail, 60);
 		Utils.formatDatePicker(dpFecha, "dd/MM/yyyy");
+		initializeComboBoxDep();
 	} 
 	
 	//--Método para Cargar los TextField a la Pantalla--//
@@ -196,6 +212,22 @@ public class VendedorFormController implements Initializable {
 			dpFecha.setValue(LocalDate.ofInstant(ven.getFecha().toInstant(), ZoneId.systemDefault()));
 		}
 		
+		if(ven.getDepartamento() == null) {
+			comboBoxDep.getSelectionModel().selectFirst();
+		}   
+		else {
+			comboBoxDep.setValue(ven.getDepartamento());
+		}
+		
+	}
+	 
+	public void loadObjAso() {
+		if(serviDep == null) {
+			throw new IllegalStateException("Servicio de Departamento Estaba Nulo");
+		}
+		List<Departamento> lista = serviDep.findAll();
+		obsList = FXCollections.observableArrayList(lista);
+		comboBoxDep.setItems(obsList);
 	}
 	
 	//--Método Privado para Asiginar los Msgs--//
@@ -209,5 +241,21 @@ public class VendedorFormController implements Initializable {
 			labErr.setText(errores.get("nombre")); 
 		} 
 	}
+	
+	private void initializeComboBoxDep() {
+		Callback<ListView<Departamento>, ListCell<Departamento>> factory = lv -> new ListCell<Departamento>() {
+			
+			@Override
+			protected void updateItem(Departamento item, boolean empty) {
+				super.updateItem(item, empty);
+				setText(empty ? "" : item.getNombre());
+			}
+			
+		};
+		comboBoxDep.setCellFactory(factory);
+		comboBoxDep.setButtonCell(factory.call(null));
+	}
+	
+	
 	
 }
