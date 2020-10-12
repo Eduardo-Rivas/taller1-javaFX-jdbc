@@ -27,9 +27,19 @@ public class Utils {
 		} catch (NumberFormatException e) {
 			return null;
 		}
-
 	}
- 
+
+	//--Método para Convertir a Double--//
+	public static Double convertirDouble(String str) {
+		try {
+			return Double.parseDouble(str);
+		} 
+		catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	
 	// --Método para Fromatear la Date en TableView--//
 	public static <T> void formatTableColumnDate(TableColumn<T, Date> tableColumn, String format) {
 		tableColumn.setCellFactory(column -> {

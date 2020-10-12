@@ -232,6 +232,5 @@ public class VendedorListController implements Initializable, DataChangeListener
 		}
 
 	}
-	
    
 }

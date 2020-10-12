@@ -40,9 +40,13 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
+            <Label fx:id="labErr" textFill="#ee0101" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <TextField fx:id="txtId" disable="true" editable="false" focusTraversable="false" opacity="0.56" prefHeight="15.0" prefWidth="105.0" GridPane.columnIndex="1" />
             <TextField fx:id="txtNombre" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="labErr" textFill="#ee0101" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <DatePicker fx:id="dpFecha" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="txtSalarioBase" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ComboBox fx:id="comboBoxDep" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
                   <Button fx:id="btnSave" mnemonicParsing="false" onAction="#onbtnSaveAction" text="Save" />
@@ -69,13 +73,9 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
-            <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="txtSalarioBase" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <DatePicker fx:id="dpFecha" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label fx:id="labErrEmail" textFill="#ff0202" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <Label fx:id="labErrFecha" textFill="#ff0101" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <Label fx:id="labErrSalarioBase" textFill="#f20101" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-            <ComboBox fx:id="comboBoxDep" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          </children>
       </GridPane>
    </children>

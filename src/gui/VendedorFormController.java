@@ -1,15 +1,16 @@
 package gui;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
-
 import db.Dbexception;
 import gui.Listeners.DataChangeListeners;
 import gui.util.Alerts;
@@ -115,7 +116,7 @@ public class VendedorFormController implements Initializable {
 		}
 		try {
 			//--Llamamos al Métdo getDatos--//
-			ven = getDatos();
+			ven = getFormDatos();
  
 			venListCont = new VendedorListController();
 			 
@@ -150,29 +151,57 @@ public class VendedorFormController implements Initializable {
 	}
  
 	//--Método para tomar los Datos de la Pantalla--//
-	private Vendedor getDatos() {
-		//--Instanciamos el Deprtamento--//
-		Vendedor obj = new Vendedor();
-	
+	private Vendedor getFormDatos() {
+		//--Instanciamos el Vendedor en un Obj.--//
+		Vendedor objVen = new Vendedor();
 		
 		//--Instanciamos Clase de Cargar Errores de Campos--//
-		ValidaErroresCampos exception = new ValidaErroresCampos("Validación de Campos");
+		ValidaErroresCampos errCampos = new ValidaErroresCampos("Validación de Campos");
 		
-		obj.setId(Utils.convertirEntero(txtId.getText()));
+		//--Cargamos lo que esta en Field en Obj. Id.--//
+		objVen.setId(Utils.convertirEntero(txtId.getText()));
 
 		//--Verifica el Contenido del Campo Nombre--//
 		if(txtNombre.getText() == null || txtNombre.getText().trim().equals("")){
-			exception.addErrores("nombre", "Campo no Puede ser Vacío");
+			errCampos.addErrores("nombre", "Nombre no Puede ser Vacío");
 		}
 		else {
-			obj.setNombre(txtNombre.getText());
+			objVen.setNombre(txtNombre.getText());
 		}
-			
+
+		//--Verifica el Contenido del Campo Email--//
+		if(txtEmail.getText() == null || txtEmail.getText().trim().equals("")){
+			errCampos.addErrores("email", "Email no Puede ser Vacío");
+		}
+		else {
+			objVen.setEmail(txtEmail.getText());
+		}
+		 
+		if(dpFecha.getValue() == null) {
+			errCampos.addErrores("fecha", "Fecha no Puede ser Vacía");
+		}
+		else {
+			//--Tomamos la Fecha y la Colocamos en un instant--//
+			Instant instant = Instant.from(dpFecha.getValue().atStartOfDay(ZoneId.systemDefault()));
+			objVen.setFecha(Date.from(instant));
+		}
+ 
+		if(txtSalarioBase.getText() == null || txtSalarioBase.getText().trim().equals("")){
+			errCampos.addErrores("salarioBase", "Salario no Puede ser Vacío");
+		}
+		else {
+			//--Tomamos el Salario--//
+			objVen.setSalarioBase(Utils.convertirDouble(txtSalarioBase.getText()));
+		}
+		
+		//--Asignamos el Departamento para el Vendedor--//
+		objVen.setDepartamento(comboBoxDep.getValue());;
+		 
 		//--Verifica Valores en el Map--//
-		if(exception.getErrores().size() > 0){
-			throw exception;
+		if(errCampos.getErrores().size() > 0){
+			throw errCampos;
 		}
-		return obj;
+		return objVen;
 	}
  
 	@FXML
@@ -180,7 +209,6 @@ public class VendedorFormController implements Initializable {
 		//--Cerramos la Ventana Actual--//
 		Utils.actualStage(evento).close();
 	}
-	
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -224,7 +252,7 @@ public class VendedorFormController implements Initializable {
 	public void loadObjAso() {
 		if(serviDep == null) {
 			throw new IllegalStateException("Servicio de Departamento Estaba Nulo");
-		}
+		} 
 		List<Departamento> lista = serviDep.findAll();
 		obsList = FXCollections.observableArrayList(lista);
 		comboBoxDep.setItems(obsList);
@@ -233,13 +261,20 @@ public class VendedorFormController implements Initializable {
 	//--Método Privado para Asiginar los Msgs--//
 	private void setErrorMsg(Map<String, String> errores) {
 		//--Cargamos una coleccion set con el Key--//
-		Set<String> campos = errores.keySet();
+		Set<String> campoKey = errores.keySet();
 		
-		//--Verificamos que el Campo nombre existe--//
-		if(campos.contains("nombre")){
-			//--Asignamos al Label el Contenido del Error--//
-			labErr.setText(errores.get("nombre")); 
-		} 
+		//--Validamos usando Condiciones Ternarias--//
+		labErr.setText(campoKey.contains("nombre") ? errores.get("nombre") : "");
+		
+		//--Verificamos que el Campo Email existe--//
+		labErrEmail.setText(campoKey.contains("email") ? errores.get("email") : "");
+		 
+		//--Verificamos que el Campo SalarioBase existe--//
+		labErrSalarioBase.setText(campoKey.contains("salarioBase") ? errores.get("salarioBase") : "");
+
+		//--Verificamos que el Campo Fecha existe--//
+		labErrFecha.setText(campoKey.contains("fecha") ? errores.get("fecha") : "");
+		
 	}
 	
 	private void initializeComboBoxDep() {
@@ -255,7 +290,5 @@ public class VendedorFormController implements Initializable {
 		comboBoxDep.setCellFactory(factory);
 		comboBoxDep.setButtonCell(factory.call(null));
 	}
-	
-	
 	
 }
